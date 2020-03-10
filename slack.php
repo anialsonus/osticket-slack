@@ -187,7 +187,6 @@ class SlackPlugin extends Plugin {
         if (!$formatted_heading) {
             $formatted_heading = '[heading text missing]';
         }
-        $this->ost->logDebug("Print formatted_heading", $formatted_heading);
 // Pull template from config, and use that.
         $template          = $this->getConfig()->get('message-template') ?: SlackPluginConfig::$template;
 // Add our custom variables to an array
@@ -230,7 +229,6 @@ class SlackPlugin extends Plugin {
 
 // Format the payload:
         $data_string = utf8_encode(json_encode($payload));
-        $this->ost->logDebug("Pring data_string ", $data_string);
 
 // After the formatting into sendable format, we set some simpler vars for later use
         $payload['original'] = true;
@@ -330,8 +328,8 @@ class SlackPlugin extends Plugin {
             'CONTROLSTART' => '<',
             'CONTROLEND'   => '>'
         ];
-// Replace the CONTROL characters, and limit text length to 500 characters.
-        return substr(str_replace(array_keys($moreformatter), array_values($moreformatter), $formatted_text), 0, 500);
+// Replace the CONTROL characters, and limit text length to 1500 characters.
+        return mb_substr(str_replace(array_keys($moreformatter), array_values($moreformatter), $formatted_text), 0, 1500, 'UTF-8');
     }
 
     /**
