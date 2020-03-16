@@ -83,7 +83,10 @@ class SlackPlugin extends Plugin {
 
         try {
 // Convert any HTML in the message into text
-            $plaintext = Format::html2text($ticket->getMessages()[0]->getBody()->getClean());
+// AS-181144 added if statement
+            if (Format::html2text($ticket->getMessages()[0])) {
+              $plaintext = Format::html2text($ticket->getMessages()[0]->getBody()->getClean());
+            }
 
             if (!$plaintext) {
                 $plaintext = '[empty]';
@@ -134,10 +137,11 @@ class SlackPlugin extends Plugin {
 
 // Check to make sure this entry isn't the first (ie: a New ticket)
         $first_entry = $ticket->getMessages()[0];
-        if ($entry->getId() == $first_entry->getId()) {
-            $this->ost->logDebug("Slack ignoring message", "Because we don't want to notify twice on new Tickets");
-            return;
-        }
+// AS-181144 added comment to if statement
+//        if ($entry->getId() == $first_entry->getId()) {
+//            $this->ost->logDebug("Slack ignoring message", "Because we don't want to notify twice on new Tickets");
+//            return;
+//        }
 
         try {
 // Convert any HTML in the message into text
